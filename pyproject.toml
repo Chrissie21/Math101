@@ -1,0 +1,24 @@
+[build-system]
+requires = ["poetry-core>=2.4,<3"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "math101"
+version = "0.1.0"
+description = "A small teaching library for numerical mathematics in Python"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+keywords = ["mathematics", "statistics", "matrices", "probability", "calculus", "education"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+[tool.poetry]
+packages = [{include = "math101", from = "src"}]
