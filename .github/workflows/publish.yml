@@ -1,6 +1,10 @@
 name: Publish math101
 
 on:
+  push:
+    tags:
+      - testpypi-v0.1.0
+      - v0.1.0
   workflow_dispatch:
     inputs:
       index:
@@ -16,7 +20,7 @@ permissions:
 
 jobs:
   build:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/tags/testpypi-v0.1.0' || github.ref == 'refs/tags/v0.1.0'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -39,7 +43,7 @@ jobs:
           if-no-files-found: error
 
   publish-testpypi:
-    if: inputs.index == 'testpypi'
+    if: inputs.index == 'testpypi' || github.ref == 'refs/tags/testpypi-v0.1.0'
     needs: build
     runs-on: ubuntu-latest
     environment: testpypi
@@ -56,7 +60,7 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
 
   publish-pypi:
-    if: inputs.index == 'pypi'
+    if: inputs.index == 'pypi' || github.ref == 'refs/tags/v0.1.0'
     needs: build
     runs-on: ubuntu-latest
     environment: pypi
