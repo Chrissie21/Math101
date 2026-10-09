@@ -1,0 +1,38 @@
+name: Verify TestPyPI math101 0.1.0
+
+on:
+  push:
+    tags:
+      - verify-testpypi-v0.1.0
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install published package from TestPyPI
+        run: python -m pip install --index-url https://test.pypi.org/simple/ --no-deps math101==0.1.0
+      - name: Import outside the source tree
+        working-directory: /tmp
+        run: |
+          python - <<'PY'
+          from importlib.metadata import metadata, version
+
+          from math101.calculus import central_difference
+          from math101.descriptive import mean
+          from math101.matrices import identity_matrix
+          from math101.probability import binomial_pmf
+
+          assert version('math101') == '0.1.0'
+          assert metadata('math101')['License-Expression'] == 'MIT'
+          assert mean([2, 4, 6]) == 4.0
+          assert identity_matrix(2) == ((1.0, 0.0), (0.0, 1.0))
+          assert binomial_pmf(2, 3, 0.5) > 0.37
+          assert abs(central_difference(lambda x: x * x, 2, step=0.01) - 4.0) < 1e-9
+          print('TestPyPI math101 0.1.0 imports and metadata verified')
+          PY
